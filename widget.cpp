@@ -9,8 +9,12 @@ Interprete::Interprete(QWidget *parent)
         generalDisplay->setFocusPolicy(Qt::NoFocus);
     input=new QLineEdit(this);
 
-    dessin=new QWidget();
+    //initialisation de la fenetre de dessin
+    dessin=new Tableau();
         dessin->resize(500,500);
+
+    //initialisation du pinceau
+    pinceau = new QPainter;
 
     //initialisation de QMap
     reference["+"] = &Interprete::addition;
@@ -37,6 +41,7 @@ Interprete::Interprete(QWidget *parent)
     reference["sqrt"]=&Interprete::racineCarre;
     reference["trunc"]=&Interprete::tronque;
     reference["line"]=&Interprete::line;
+    reference["exit"]=&Interprete::exit;
 
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
         vLayout1->addWidget(generalDisplay);
@@ -256,7 +261,16 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
+    pinceau->drawLine(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler());
+    pinceau->save();
+    dessin->dessiner(pinceau);
+    //dessin->render(background);
     dessin->show();
     //QPainter pinceau(this);
     //pinceau.drawLine(pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler());
+}
+
+// exit
+void Interprete::exit(){
+    qApp->exit();
 }

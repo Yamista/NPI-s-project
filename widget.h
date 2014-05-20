@@ -2,12 +2,15 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QApplication>
+#include <QPainter>
 #include <QLabel>
 #include <QTextEdit>
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <QMap>
 #include "pile.h"
+#include "tableau.h"
 #include <stdexcept>
 #include <iostream>
 #include <math.h>
@@ -25,7 +28,8 @@ private:
     Pile<double> numPile;
     QMap<QString,void(Interprete::*)()>reference;
 
-    QWidget* dessin;
+    Tableau* dessin;
+    QPainter* pinceau;
 
 public:
     Interprete(QWidget *parent = 0);
@@ -55,6 +59,7 @@ public:
     void racineCarre();
     void tronque();
     void line();
+    void exit();
 
 public slots:
     void doInput();
