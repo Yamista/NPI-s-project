@@ -258,7 +258,7 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
-    dessin->dessiner();
+    dessin->dessiner(this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler());
     //dessin->render(background);
     dessin->show();
     //QPainter pinceau(this);

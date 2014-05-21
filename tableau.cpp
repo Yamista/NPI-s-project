@@ -1,18 +1,15 @@
 #include "tableau.h"
 
-Tableau::Tableau(QWidget *parent) :
-    QWidget(parent)
-{
+Tableau::Tableau(){
     //initialisation du background
-    background = new QPixmap(this->size());
-    QPainter painter(this);
-    painter.setBrush(Qt::black);
-    painter.drawLine(100,200,300,400);
 }
-void Tableau::paintEvent(){
-
+void Tableau::paintEvent(QPaintEvent *){
+    QPainter pinceau(&background);
+    pinceau.drawLine(ligne);
+    pinceau.end();
+    this->setPixmap(background);
 }
 
-void Tableau::dessiner(){
-    this->update();
+void Tableau::dessiner(double x1,double y1,double x2,double y2){
+    ligne.setLine(x1,y1,x2,y2);
 }

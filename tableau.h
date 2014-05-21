@@ -4,16 +4,18 @@
 #include <QWidget>
 #include <QPixmap>
 #include <QPainter>
+#include <QLabel>
 
-class Tableau : public QWidget
+class Tableau : public QLabel
 {
     Q_OBJECT
 
-    QPixmap* background;
+    QPixmap background;
+    QLineF ligne;
 public:
-    explicit Tableau(QWidget *parent = 0);
-    void paintEvent();
-    void dessiner();
+    explicit Tableau();
+    void paintEvent(QPaintEvent*);
+    void dessiner(double x1, double y1, double x2, double y2);
 
 signals:
 
