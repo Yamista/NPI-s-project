@@ -10,7 +10,7 @@ class Tableau : public QLabel
 {
     Q_OBJECT
 
-    QPixmap background;
+    QPixmap* background;
     QLineF ligne;
 public:
     explicit Tableau();
