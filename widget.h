@@ -29,7 +29,6 @@ private:
     QMap<QString,void(Interprete::*)()>reference;
 
     Tableau* dessin;
-    QPainter* pinceau;
 
 public:
     Interprete(QWidget *parent = 0);
@@ -59,7 +58,7 @@ public:
     void racineCarre();
     void tronque();
     void line();
-    void exit();
+    void quit();
 
 public slots:
     void doInput();

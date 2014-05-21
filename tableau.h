@@ -10,11 +10,10 @@ class Tableau : public QWidget
     Q_OBJECT
 
     QPixmap* background;
-    QPainter* pinceau;
 public:
     explicit Tableau(QWidget *parent = 0);
     void paintEvent();
-    void dessiner(QPainter*_pinceau);
+    void dessiner();
 
 signals:
 

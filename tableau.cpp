@@ -5,14 +5,14 @@ Tableau::Tableau(QWidget *parent) :
 {
     //initialisation du background
     background = new QPixmap(this->size());
-    this->update();
-}
-void Tableau::paintEvent(){
-    QPainter painter;
+    QPainter painter(this);
+    painter.setBrush(Qt::black);
     painter.drawLine(100,200,300,400);
 }
+void Tableau::paintEvent(){
 
-void Tableau::dessiner(QPainter *_pinceau){
-    pinceau = _pinceau;
+}
+
+void Tableau::dessiner(){
     this->update();
 }
