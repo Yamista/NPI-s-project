@@ -38,6 +38,7 @@ Interprete::Interprete(QWidget *parent)
     reference["sqrt"]=&Interprete::racineCarre;
     reference["trunc"]=&Interprete::tronque;
     reference["line"]=&Interprete::line;
+    reference["color"]=&Interprete::color;
     reference["quit"]=&Interprete::quit;
 
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
@@ -263,6 +264,11 @@ void Interprete::line(){
     dessin->show();
     //QPainter pinceau(this);
     //pinceau.drawLine(pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler());
+}
+
+// color
+void Interprete::color(){
+    dessin->setCouleur(int(numPile.depiler()));
 }
 
 // quit

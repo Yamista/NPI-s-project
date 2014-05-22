@@ -58,6 +58,7 @@ public:
     void racineCarre();
     void tronque();
     void line();
+    void color();
     void quit();
 
 public slots:
