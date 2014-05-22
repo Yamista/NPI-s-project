@@ -59,6 +59,7 @@ public:
     void tronque();
     void line();
     void color();
+    void drawstr();
     void quit();
 
 public slots:

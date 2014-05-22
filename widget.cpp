@@ -39,6 +39,7 @@ Interprete::Interprete(QWidget *parent)
     reference["trunc"]=&Interprete::tronque;
     reference["line"]=&Interprete::line;
     reference["color"]=&Interprete::color;
+    reference["drawstr"]=&Interprete::drawstr;
     reference["quit"]=&Interprete::quit;
 
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
@@ -259,7 +260,7 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
-    dessin->dessiner(this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler());
+    dessin->setLigne(this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler());
     //dessin->render(background);
     dessin->show();
     //QPainter pinceau(this);
@@ -269,6 +270,12 @@ void Interprete::line(){
 // color
 void Interprete::color(){
     dessin->setCouleur(int(numPile.depiler()));
+}
+
+// drawstr
+void Interprete::drawstr(){
+    dessin->afficheTexte(int(this->numPile.depiler()),int(this->numPile.depiler()),this->strPile.depiler());
+    dessin->show();
 }
 
 // quit
