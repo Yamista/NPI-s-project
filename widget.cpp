@@ -129,7 +129,11 @@ void Interprete::push() {
 
 // pushstr  "chaine_de_caractere"
 void Interprete::pushstr() {
-    QString chaine = instruction[curseur+1];
+    QString chaine = instruction[++curseur];
+    while(instruction[curseur].at(instruction[curseur].length()-1) != '\"')
+    {
+        chaine += ' ' + instruction[++curseur];
+    }
     chaine.remove(0,1);
     chaine.remove(chaine.length()-1,1);
     strPile.empiler(chaine);
@@ -260,7 +264,7 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
-    dessin->setLigne(this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler(),this->numPile.depiler());
+    dessin->setLigne(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler());
     //dessin->render(background);
     dessin->show();
     //QPainter pinceau(this);
@@ -274,7 +278,7 @@ void Interprete::color(){
 
 // drawstr
 void Interprete::drawstr(){
-    dessin->afficheTexte(int(this->numPile.depiler()),int(this->numPile.depiler()),this->strPile.depiler());
+    dessin->afficheTexte(int(numPile.depiler()),int(numPile.depiler()),strPile.depiler());
     dessin->show();
 }
 

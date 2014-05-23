@@ -19,7 +19,6 @@ void Tableau::paintEvent(QPaintEvent *){
     pinceau.save();
     pinceau.drawLine(ligne);
     pinceau.drawText(QPoint(x,y),texte);
-    //pinceau.drawText(QPoint(150,150),"bite");
     pinceau.restore();
 
 }
@@ -50,7 +49,7 @@ void Tableau::setCouleur(int _couleur){
 void Tableau::afficheTexte(int _x, int _y, QString _texte){
     x = _x;
     y = _y;
-    texte = _texte;
+     texte = _texte;
     delete background;
     background = new QPixmap(this->size());
     this->render(background);
