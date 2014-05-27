@@ -13,12 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp \
-    tableau.cpp
+        widget.cpp
 
 HEADERS  += widget.h \
     pile.h \
-    reference.h \
-    tableau.h
+    reference.h
 
 OTHER_FILES +=

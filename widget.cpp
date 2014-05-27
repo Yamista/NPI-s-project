@@ -10,8 +10,11 @@ Interprete::Interprete(QWidget *parent)
     input=new QLineEdit(this);
 
     //initialisation de la fenetre de dessin
-    dessin=new Tableau();
-        dessin->resize(500,500);
+    dessin = new QGraphicsScene;
+    tableau = new QGraphicsView(dessin);
+
+        numPile.empiler(500);
+        numPile.empiler(500);
 
     //initialisation de QMap
     reference["+"] = &Interprete::addition;
@@ -42,6 +45,7 @@ Interprete::Interprete(QWidget *parent)
     reference["drawstr"]=&Interprete::drawstr;
     reference["quit"]=&Interprete::quit;
 
+
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
         vLayout1->addWidget(generalDisplay);
         vLayout1->addWidget(input);
@@ -71,20 +75,50 @@ void Interprete::doInput(){
     }
 }
 
+// traitement du fichier .npi
+void Interprete::executeFichier(){
+
+    QFile file(QApplication::applicationDirPath() + "/script/" + input->text() + ".npi");
+    QString ligne;
+    input->clear();
+    if(file.open(QIODevice::ReadOnly))
+    {
+        do
+        {
+            ligne = file.readLine();
+            input->setText(ligne);
+            execute();
+        }while(!file.atEnd());
+    }
+    file.close();
+    input->clear();
+}
+
 void Interprete::execute(){
 
     // Liste des mots de l'instruction
     instruction = input->text().split(" ");
-
+    instruction[instruction.count()-1].remove("\n");
+    if(instruction[0].at(0) == '\"'){
+        --curseur;
+        pushstr();
+    }
     curseur=0;
     do{
     // Si le mot clef existe
         if(reference.find(instruction[curseur]) != reference.end()){
             (this->*reference.value(instruction[curseur]))(); // Appelle de la fonction
         }
+        else if(instruction[curseur] == ""){
+            instruction.removeAt(curseur);
+        }
+        else if(QFile::exists(QApplication::applicationDirPath() + "/script/" + input->text() + ".npi")){
+            strPile.empiler(input->text());
+            executeFichier();
+        }
         else{
             //int test = instruction[curseur].toDouble();
-            numPile.empiler(instruction[curseur].toDouble());
+            //numPile.empiler(instruction[curseur].toDouble());
         }
         ++curseur;
     }while(curseur< instruction.count());
@@ -102,7 +136,7 @@ void Interprete::addition() {
 void Interprete::soustraction() {
     double a = numPile.depiler();
     double b = numPile.depiler();
-    numPile.empiler(a-b);
+    numPile.empiler(b-a);
 }
 
 // *
@@ -151,16 +185,18 @@ void Interprete::popstr() {
 
 // copy
 void Interprete::copy() {
-    unsigned i = unsigned(numPile.depiler());
-    if(i < numPile.compter())
+    int i = int(numPile.depiler());
+    if(unsigned(i) < numPile.compter())
     {
         double* stock  = new double[i+1];
-        for( unsigned j=0 ; j <= i ; ++j )
-            stock[i-j-1] = numPile.depiler();
-        double nombreCopy = stock[0];
-        for( unsigned j=0 ; j<=i ; ++j )
+        for( int j=0 ; j <= i ; ++j )
+            stock[j] = numPile.depiler();
+        double nombreCopy = stock[i];
+        for( int j=i ; j>=0 ; --j )
             numPile.empiler(stock[j]);
         numPile.empiler(nombreCopy);
+
+        delete [] stock;
     }
     else
         qDebug("copy impossible : pile trop petite");
@@ -264,22 +300,26 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
-    dessin->setLigne(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler());
+    dessin->addLine(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler());
     //dessin->render(background);
-    dessin->show();
+    tableau->show();
     //QPainter pinceau(this);
     //pinceau.drawLine(pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler());
 }
 
 // color
 void Interprete::color(){
-    dessin->setCouleur(int(numPile.depiler()));
+    //dessin->setCouleur(int(numPile.depiler()));
 }
 
 // drawstr
 void Interprete::drawstr(){
-    dessin->afficheTexte(int(numPile.depiler()),int(numPile.depiler()),strPile.depiler());
-    dessin->show();
+    QGraphicsTextItem* text = new QGraphicsTextItem;
+    text->setPos(numPile.depiler(),numPile.depiler());
+    text->setPlainText(strPile.depiler());
+
+    dessin->addItem(text);
+    tableau->show();
 }
 
 // quit

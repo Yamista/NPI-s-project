@@ -4,6 +4,11 @@
 #include <QWidget>
 #include <QApplication>
 #include <QPainter>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsTextItem>
+#include <QTextStream>
+#include <QFile>
 #include <QLabel>
 #include <QTextEdit>
 #include <QLineEdit>
@@ -28,12 +33,14 @@ private:
     Pile<double> numPile;
     QMap<QString,void(Interprete::*)()>reference;
 
-    Tableau* dessin;
+    QGraphicsScene* dessin;
+    QGraphicsView* tableau;
 
 public:
     Interprete(QWidget *parent = 0);
     ~Interprete();
     void execute();
+    void executeFichier();
     void addition();
     void soustraction();
     void multiplication();
