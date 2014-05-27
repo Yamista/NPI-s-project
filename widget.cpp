@@ -78,7 +78,7 @@ void Interprete::doInput(){
 // traitement du fichier .npi
 void Interprete::executeFichier(){
 
-    QFile file(QApplication::applicationDirPath() + "/script/" + input->text() + ".npi");
+    QFile file(QApplication::applicationDirPath() + "/script/" + instruction[curseur] + ".npi");
     QString ligne;
     input->clear();
     if(file.open(QIODevice::ReadOnly))
@@ -86,8 +86,12 @@ void Interprete::executeFichier(){
         do
         {
             ligne = file.readLine();
-            input->setText(ligne);
-            execute();
+            int i = ligne.indexOf('#');
+            ligne = ligne.remove(i,ligne.size()-i);
+            if(ligne.count() != 0){
+                input->setText(ligne);
+                execute();
+            }
         }while(!file.atEnd());
     }
     file.close();
@@ -106,13 +110,14 @@ void Interprete::execute(){
     curseur=0;
     do{
     // Si le mot clef existe
-        if(reference.find(instruction[curseur]) != reference.end()){
+        if(reference.find(instruction[curseur]) != reference.end())
             (this->*reference.value(instruction[curseur]))(); // Appelle de la fonction
-        }
-        else if(instruction[curseur] == ""){
+
+        else if(instruction[curseur] == "" && instruction.count() != 0){
             instruction.removeAt(curseur);
+            --curseur;
         }
-        else if(QFile::exists(QApplication::applicationDirPath() + "/script/" + input->text() + ".npi")){
+        else if(QFile::exists(QApplication::applicationDirPath() + "/script/" + instruction[curseur] + ".npi")){
             strPile.empiler(input->text());
             executeFichier();
         }
