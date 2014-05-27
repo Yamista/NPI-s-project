@@ -236,7 +236,21 @@ void Interprete::printstr() {
 
 // display
 void Interprete::display() {
-    numPile.afficher(generalDisplay);
+    double nombre = 0;
+    Pile<double> pileTemp;
+    do
+    {
+        pileTemp.empiler(numPile.depiler());
+    }while(numPile.compter() != 0);
+    generalDisplay->setText(generalDisplay->toPlainText()+"\n[");
+    do
+    {
+        nombre = pileTemp.depiler();
+        generalDisplay->setText(generalDisplay->toPlainText()+QString::number(nombre) + ' ');
+        numPile.empiler(nombre);
+    }while(pileTemp.compter() != 0);
+    generalDisplay->setText(generalDisplay->toPlainText().remove(generalDisplay->toPlainText().size()-1));
+    generalDisplay->setText(generalDisplay->toPlainText()+']');
 }
 
 // displaystr
