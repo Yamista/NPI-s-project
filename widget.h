@@ -20,6 +20,7 @@
 #include "tableau.h"
 #include <stdexcept>
 #include <iostream>
+#include <qmath.h>
 #include <math.h>
 
 class Interprete : public QWidget
@@ -70,6 +71,7 @@ public:
     void color();
     void drawstr();
     void quit();
+    void toBinaire();
 
 public slots:
     void doInput();

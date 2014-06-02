@@ -49,6 +49,7 @@ Interprete::Interprete(QWidget *parent)
     reference["color"]=&Interprete::color;
     reference["drawstr"]=&Interprete::drawstr;
     reference["quit"]=&Interprete::quit;
+    reference["toBinaire"]=&Interprete::toBinaire;
 
 
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
@@ -129,7 +130,7 @@ void Interprete::execute(){
         }
         else{
             //int test = instruction[curseur].toDouble();
-            //numPile.empiler(instruction[curseur].toDouble());
+            numPile.empiler(instruction[curseur].toDouble());
         }
         ++curseur;
     }while(curseur< instruction.count());
@@ -350,4 +351,28 @@ void Interprete::drawstr(){
 // quit
 void Interprete::quit(){
     qApp->exit();
+}
+// toBinaire
+void Interprete::toBinaire(){
+    int decimal = int(numPile.depiler());
+    int puissance = 0;
+    do
+    {
+        ++puissance;
+    }while(qPow(2,puissance) < decimal);
+    QString binaire="";
+    --puissance;
+    do
+    {
+        if(qPow(2,puissance) <= decimal){
+            decimal -= qPow(2,puissance);
+            binaire += QString::number(1);
+        }
+        else{
+            binaire += QString::number(0);
+        }
+        --puissance;
+    }while(puissance >= 0);
+    numPile.empiler(binaire.toDouble());
+    strPile.empiler(binaire);
 }
