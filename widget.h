@@ -12,6 +12,8 @@
 #include <QLabel>
 #include <QTextEdit>
 #include <QLineEdit>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QMap>
 #include "pile.h"

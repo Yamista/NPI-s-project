@@ -12,9 +12,14 @@ Interprete::Interprete(QWidget *parent)
     //initialisation de la fenetre de dessin
     dessin = new QGraphicsScene;
     tableau = new QGraphicsView(dessin);
+    //tableau->showMaximized();
+    tableau->setFixedSize(QApplication::desktop()->width()-15,QApplication::desktop()->height()-75);
+    //tableau->setFixedSize(tableau->maximumSize());
+    //tableau->maximumViewportSize();
 
-        numPile.empiler(500);
-        numPile.empiler(500);
+
+        numPile.empiler(tableau->width());
+        numPile.empiler(tableau->height());
 
     //initialisation de QMap
     reference["+"] = &Interprete::addition;
@@ -102,7 +107,8 @@ void Interprete::execute(){
 
     // Liste des mots de l'instruction
     instruction = input->text().split(" ");
-    instruction[instruction.count()-1].remove("\n");
+    instruction[instruction.count()-1].remove('\n');
+    instruction[instruction.count()-1].remove('\r');
     if(instruction[0].at(0) == '\"'){
         --curseur;
         pushstr();
