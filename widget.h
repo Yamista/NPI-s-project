@@ -15,6 +15,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
+#include <QPen>
 #include <QMap>
 #include "pile.h"
 #include "tableau.h"
@@ -32,12 +33,16 @@ private:
     QStringList instruction;
     int curseur;
 
+    QFile* file;
+
     Pile<QString> strPile;
     Pile<double> numPile;
     QMap<QString,void(Interprete::*)()>reference;
 
     QGraphicsScene* dessin;
     QGraphicsView* tableau;
+
+    QPen* pen;
 
 public:
     Interprete(QWidget *parent = 0);
@@ -70,8 +75,12 @@ public:
     void line();
     void color();
     void drawstr();
+    void exit();
     void quit();
     void toBinaire();
+    void binaireToDecimal();
+    void conditionIf();
+    void boucleFor();
 
 public slots:
     void doInput();

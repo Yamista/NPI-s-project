@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         widget.cpp
 
 HEADERS  += widget.h \
-    pile.h \
-    reference.h
+    pile.h
 
 OTHER_FILES +=

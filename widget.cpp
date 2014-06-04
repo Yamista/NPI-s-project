@@ -18,8 +18,14 @@ Interprete::Interprete(QWidget *parent)
     //tableau->maximumViewportSize();
 
 
-        numPile.empiler(tableau->width());
-        numPile.empiler(tableau->height());
+        numPile.empiler(tableau->width()-10);
+        numPile.empiler(tableau->height()-10);
+        numPile.empiler(tableau->width()-10);
+        numPile.empiler(tableau->height()-10);
+
+        pen = new QPen(Qt::white);
+        dessin->addLine(0,0,numPile.depiler(),numPile.depiler(),*pen);
+        pen->setColor(Qt::black);
 
     //initialisation de QMap
     reference["+"] = &Interprete::addition;
@@ -48,8 +54,13 @@ Interprete::Interprete(QWidget *parent)
     reference["line"]=&Interprete::line;
     reference["color"]=&Interprete::color;
     reference["drawstr"]=&Interprete::drawstr;
+    reference["exit"]=&Interprete::exit;
+    /* FONCTIONS SUPPLEMENTAIRES */
     reference["quit"]=&Interprete::quit;
     reference["toBinaire"]=&Interprete::toBinaire;
+    reference["binaireToDecimal"]=&Interprete::binaireToDecimal;
+    reference["if"]=&Interprete::conditionIf;
+    reference["for"]=&Interprete::boucleFor;
 
 
     QVBoxLayout* vLayout1=new QVBoxLayout(this);
@@ -84,23 +95,24 @@ void Interprete::doInput(){
 // traitement du fichier .npi
 void Interprete::executeFichier(){
 
-    QFile file(QApplication::applicationDirPath() + "/script/" + instruction[curseur] + ".npi");
+    file = new QFile(QApplication::applicationDirPath() + "/script/" + instruction[curseur] + ".npi");
     QString ligne;
     input->clear();
-    if(file.open(QIODevice::ReadOnly))
+    if(file->open(QIODevice::ReadOnly))
     {
         do
         {
-            ligne = file.readLine();
+            ligne = file->readLine();
             int i = ligne.indexOf('#');
             ligne = ligne.remove(i,ligne.size()-i);
             if(ligne.count() != 0){
                 input->setText(ligne);
                 execute();
             }
-        }while(!file.atEnd());
+        }while(!file->atEnd());
     }
-    file.close();
+    if(file->isOpen())
+        file->close();
     input->clear();
 }
 
@@ -163,7 +175,7 @@ void Interprete::division() {
     double a = numPile.depiler();
     double b = numPile.depiler();
     if(b != 0 )
-        numPile.empiler(a/b);
+        numPile.empiler(b/a);
     else
         qDebug("division par 0");
 }
@@ -297,21 +309,21 @@ void Interprete::swapString(){
 void Interprete::sinus(){
     double rad(PI*(numPile.depiler())/180);
     rad=sin(rad);
-    numPile.empiler(180*rad*PI);
+    numPile.empiler(rad);
 }
 
 // cos
 void Interprete::cosinus(){
     double rad(PI*(numPile.depiler())/180);
     rad=cos(rad);
-    numPile.empiler(180*rad*PI);
+    numPile.empiler(rad);
 }
 
 // tan
 void Interprete::tangente(){
     double rad(PI*(numPile.depiler())/180);
     rad=tan(rad);
-    numPile.empiler(180*rad*PI);
+    numPile.empiler(rad);
 }
 
 // sqrt
@@ -326,16 +338,15 @@ void Interprete::tronque(){
 
 // line
 void Interprete::line(){
-    dessin->addLine(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler());
-    //dessin->render(background);
+    dessin->addLine(numPile.depiler(),numPile.depiler(),numPile.depiler(),numPile.depiler(),*pen);
     tableau->show();
-    //QPainter pinceau(this);
-    //pinceau.drawLine(pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler(),pere->numPile.depiler());
+
 }
 
 // color
 void Interprete::color(){
-    //dessin->setCouleur(int(numPile.depiler()));
+    QColor tabCouleur[] = {Qt::black,Qt::white,Qt::red,Qt::green,Qt::blue,Qt::cyan,Qt::magenta,Qt::yellow};
+    pen->setColor(tabCouleur[int(numPile.depiler())]);
 }
 
 // drawstr
@@ -347,11 +358,18 @@ void Interprete::drawstr(){
     dessin->addItem(text);
     tableau->show();
 }
+// exit
+void Interprete::exit(){
+    file->close();
+}
 
+/* Quand l'utilisateur entre le mot-clef "quit" cela ferme l'application */
 // quit
 void Interprete::quit(){
     qApp->exit();
 }
+
+/* Dépile un nombre et le convertie en binaire et le stock dans une chaine de caractère */
 // toBinaire
 void Interprete::toBinaire(){
     int decimal = int(numPile.depiler());
@@ -373,6 +391,40 @@ void Interprete::toBinaire(){
         }
         --puissance;
     }while(puissance >= 0);
-    numPile.empiler(binaire.toDouble());
     strPile.empiler(binaire);
+}
+
+/* Dépile une chaine de caractère qui correspond à un nombre binaire et le convertie en décimal */
+// binaireToDecimal /!\ à finir
+void Interprete::binaireToDecimal(){
+    QString binaire = strPile.depiler();
+    int decimal;
+    for( int i=0 ; i < binaire.size() ; ++i){
+        decimal += (binaire.at(i).toLatin1() - 48) * qPow(2,i);
+    }
+    numPile.empiler(decimal);
+}
+
+/* Dépile la valeur au sommet de la pile numérique, si elle est nulle alors elle saute la prochaine instruction
+    /!\ avoir l'instruction suivante sur la même ligne /!\ */
+// if
+void Interprete::conditionIf(){
+    if(numPile.depiler() <= 0)
+        ++curseur;
+}
+
+/* Dépile la valeur au sommet de la pile numérique et répète autant de fois que la valeur
+    /!\ avoir l'instruction suivante sur la même ligne /!\
+    /!\ push [repetition] for [instructions] /!\*/
+// for
+void Interprete::boucleFor(){
+    for(int i = 0 ; i < 3 ; ++i)
+        instruction.removeAt(0);
+    QString chaineInstruction;
+    for(int i = 0 ; i < instruction.length() ; ++i)
+        chaineInstruction += instruction[i] + ' ';
+    input->setText(chaineInstruction);
+    int repetition = int(numPile.depiler());
+    for(int i = 0 ; i < repetition ; ++i)
+        execute();
 }
