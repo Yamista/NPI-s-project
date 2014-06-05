@@ -18,7 +18,6 @@
 #include <QPen>
 #include <QMap>
 #include "pile.h"
-#include "tableau.h"
 #include <stdexcept>
 #include <iostream>
 #include <qmath.h>

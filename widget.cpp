@@ -354,7 +354,7 @@ void Interprete::drawstr(){
     QGraphicsTextItem* text = new QGraphicsTextItem;
     text->setPos(numPile.depiler(),numPile.depiler());
     text->setPlainText(strPile.depiler());
-
+    text->setDefaultTextColor(pen->color());
     dessin->addItem(text);
     tableau->show();
 }
